@@ -8,18 +8,22 @@ import { AppService } from './app.service';
     ClientsModule.register([
       {
         name: 'orders',
-        transport: Transport.TCP,
+        transport: Transport.RMQ,
         options: {
-          host: '127.0.0.1',
-          port: 3003,
+          urls: ['amqp://localhost:5672'],
+          queueOptions: {
+            durable: false,
+          },
         },
       },
       {
         name: 'products',
-        transport: Transport.TCP,
+        transport: Transport.RMQ,
         options: {
-          host: '127.0.0.1',
-          port: 3002,
+          urls: ['amqp://localhost:5672'],
+          queueOptions: {
+            durable: false,
+          },
         },
       },
     ]),
