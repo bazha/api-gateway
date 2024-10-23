@@ -10,9 +10,9 @@ import { AppService } from './app.service';
         name: 'orders',
         transport: Transport.RMQ,
         options: {
-          urls: ['amqp://guest:guest@rabbitmq:5672'],
+          urls: ['amqp://myuser:mypassword@amqp:5672'],
           queueOptions: {
-            durable: false,
+            durable: true,
           },
         },
       },
@@ -20,9 +20,9 @@ import { AppService } from './app.service';
         name: 'products',
         transport: Transport.RMQ,
         options: {
-          urls: ['amqp://guest:guest@rabbitmq:5672'],
+          urls: ['amqp://myuser:mypassword@rabbitmq:5672'],
           queueOptions: {
-            durable: false,
+            durable: true,
           },
         },
       },

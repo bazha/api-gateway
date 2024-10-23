@@ -6,10 +6,10 @@ export class AppService {
   @Client({
     transport: Transport.RMQ,
     options: {
-      urls: ['amqp://guest:guest@rabbitmq:5672'],
+      urls: ['amqp://myuser:mypassword@rabbitmq:5672'],
       queue: 'api_gateway_queue',
       queueOptions: {
-        durable: false,
+        durable: true,
       },
     },
   })
