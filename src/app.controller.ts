@@ -12,6 +12,6 @@ export class AppController {
 
   @Get('/products')
   getProductsCLient() {
-    return this.appService.getHelloOrders('Hello Products');
+    return this.appService.getHelloProducts('Hello Products');
   }
 }

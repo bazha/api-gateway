@@ -1,30 +1,18 @@
-import { Injectable } from '@nestjs/common';
-import { Client, ClientProxy, Transport } from '@nestjs/microservices';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class AppService {
-  @Client({
-    transport: Transport.RMQ,
-    options: {
-      urls: ['amqp://guest:guest@rabbitmq:5672'],
-      queue: 'api_gateway_queue',
-      queueOptions: {
-        durable: true,
-      },
-    },
-  })
-  private readonly client: ClientProxy;
-
-  // constructor(
-  //   @Inject('orders') private readonly clientServiceOrders: ClientProxy,
-  //   @Inject('products') private readonly clientServiceProducts: ClientProxy,
-  // ) {}
+  constructor(
+    @Inject('ORDER_SERVICE') private readonly ordersClient: ClientProxy,
+    @Inject('PRODUCT_SERVICE') private readonly productsClient: ClientProxy,
+  ) {}
 
   getHelloOrders(data) {
-    return this.client.send('helloWorldMethod', data);
+    return this.ordersClient.send('helloWorldMethod', data);
   }
 
   getHelloProducts(data) {
-    return this.client.send('helloWorldMethod', data);
+    return this.productsClient.send('helloWorldMethod', data);
   }
 }

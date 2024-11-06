@@ -7,20 +7,22 @@ import { AppService } from './app.service';
   imports: [
     ClientsModule.register([
       {
-        name: 'orders',
+        name: 'ORDER_SERVICE',
         transport: Transport.RMQ,
         options: {
           urls: ['amqp://guest:guest@rabbitmq:5672'],
+          queue: 'orders_queue',
           queueOptions: {
             durable: true,
           },
         },
       },
       {
-        name: 'products',
+        name: 'PRODUCT_SERVICE',
         transport: Transport.RMQ,
         options: {
           urls: ['amqp://guest:guest@rabbitmq:5672'],
+          queue: 'products_queue',
           queueOptions: {
             durable: true,
           },

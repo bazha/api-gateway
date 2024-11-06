@@ -5,22 +5,19 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
   const logger = new Logger('bootstrap');
+  const app = await NestFactory.create(AppModule);
 
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    AppModule,
-    {
-      transport: Transport.RMQ,
-      options: {
-        urls: ['amqp://guest:guest@rabbitmq:5672'],
-        queue: 'api_gateway_queue',
-        queueOptions: {
-          durable: true,
-        },
-      },
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.RMQ,
+    options: {
+      urls: ['amqp://guest:guest@rabbitmq:5672'],
+      queue: 'api_gateway_queue',
+      queueOptions: { durable: true },
     },
-  );
+  });
 
-  await app.listen();
-  logger.log(`App has started`);
+  await app.startAllMicroservices();
+  await app.listen(process.env.PORT);
+  logger.log(`App has started on ${process.env.PORT}`);
 }
 bootstrap();
