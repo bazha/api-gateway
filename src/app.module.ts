@@ -30,7 +30,7 @@ import { join } from 'path';
         },
       },
       {
-        name: 'PRODUCT_GRPC_SERVICE',
+        name: 'ORDER_GRPC_SERVICE',
         transport: Transport.GRPC,
         options: {
           url: 'orders:3001',
@@ -42,7 +42,7 @@ import { join } from 'path';
         },
       },
       {
-        name: 'ORDER_GRPC_SERVICE',
+        name: 'PRODUCT_GRPC_SERVICE',
         transport: Transport.GRPC,
         options: {
           url: 'products:3002',
