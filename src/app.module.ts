@@ -35,7 +35,7 @@ import { join } from 'path';
         options: {
           url: 'orders:3001',
           package: 'orders',
-          protoPath: join(process.cwd(), './src/orders/proto/orders.proto'),
+          protoPath: join(__dirname, '../src/protos/orders.proto'),
         },
       },
       {
@@ -44,7 +44,7 @@ import { join } from 'path';
         options: {
           url: 'products:3002',
           package: 'products',
-          protoPath: join(process.cwd(), './src/products/proto/products.proto'),
+          protoPath: join(__dirname, '../src/protos/products.proto'),
         },
       },
     ]),
