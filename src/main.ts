@@ -16,6 +16,7 @@ async function bootstrap() {
     },
   });
 
+  app.setGlobalPrefix('api');
   await app.startAllMicroservices();
   await app.listen(process.env.PORT);
   logger.log(`App has started on ${process.env.PORT}`);

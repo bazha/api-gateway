@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
+import { OrdersService } from './orders/orders.service';
+import { OrdersController } from './orders/orders.controller';
+import { ProductsService } from './products/products.service';
+import { ProductsController } from './products/products.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { AppService } from './app.service';
 import { CustomersClientService } from './clients/customers.client';
 import { join } from 'path';
 
@@ -59,7 +62,7 @@ import { join } from 'path';
       },
     ]),
   ],
-  controllers: [AppController],
-  providers: [AppService, CustomersClientService],
+  controllers: [ProductsController, OrdersController, AppController],
+  providers: [ProductsService, OrdersService, CustomersClientService],
 })
 export class AppModule {}
