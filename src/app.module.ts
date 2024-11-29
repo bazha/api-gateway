@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AppService } from './app.service';
+import { CustomersClientService } from './clients/customers.client';
 import { join } from 'path';
 
 @Module({
@@ -47,9 +48,18 @@ import { join } from 'path';
           protoPath: join(__dirname, '../src/protos/products.proto'),
         },
       },
+      {
+        name: 'CUSTOMERS_GRPC_SERVICE',
+        transport: Transport.GRPC,
+        options: {
+          package: 'customers',
+          protoPath: join(__dirname, '../src/protos/customers.proto'),
+          url: 'customers:3003',
+        },
+      },
     ]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, CustomersClientService],
 })
 export class AppModule {}

@@ -1,9 +1,13 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { AppService } from './app.service';
+import { CustomersClientService } from './clients/customers.client';
 
-@Controller()
+@Controller('/api')
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly customersService: CustomersClientService,
+  ) {}
 
   @Get('/orders')
   getOrdersService() {
@@ -13,5 +17,10 @@ export class AppController {
   @Get('/products')
   getProductsCLient() {
     return this.appService.getHelloProducts('Hello Products');
+  }
+
+  @Get('/customers/:id')
+  async getCustomer(@Param('id') id: string) {
+    return this.customersService.getCustomer(id);
   }
 }
