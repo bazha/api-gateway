@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { OrdersService } from './orders/orders.service';
 import { OrdersController } from './orders/orders.controller';
 import { ProductsService } from './products/products.service';
 import { ProductsController } from './products/products.controller';
+import { CustomersController } from './customers/customers.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { CustomersClientService } from './clients/customers.client';
+import { CustomersClientService } from './customers/customers.client';
 import { join } from 'path';
 
 @Module({
@@ -62,7 +62,7 @@ import { join } from 'path';
       },
     ]),
   ],
-  controllers: [ProductsController, OrdersController, AppController],
+  controllers: [ProductsController, OrdersController, CustomersController],
   providers: [ProductsService, OrdersService, CustomersClientService],
 })
 export class AppModule {}
