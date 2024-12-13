@@ -1,5 +1,5 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { ClientGrpc } from '@nestjs/microservices';
+import { ClientGrpc, RpcException } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 
 interface CustomersServiceGrpc {
@@ -22,6 +22,13 @@ export class CustomersClientService implements OnModuleInit {
   }
 
   getCustomer(customerId: string) {
-    return this.customersService.getCustomer({ customerId });
+    try {
+      const response = this.customersService.getCustomer({ customerId });
+      console.log({ response });
+      return response;
+    } catch (error) {
+      console.error(error instanceof RpcException);
+      console.log({ error }, 'customer client');
+    }
   }
 }

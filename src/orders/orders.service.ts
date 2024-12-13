@@ -4,9 +4,9 @@ import { ClientProxy } from '@nestjs/microservices';
 @Injectable()
 export class OrdersService {
   constructor(
-    @Inject('ORDER_SERVICE') private readonly ordersClient: ClientProxy
+    @Inject('ORDER_SERVICE') private readonly ordersClient: ClientProxy,
   ) {}
-  
+
   getOrders(data) {
     return this.ordersClient.send('helloWorldMethod', data);
   }
