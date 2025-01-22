@@ -8,6 +8,6 @@ export class OrdersService {
   ) {}
 
   getOrders(data) {
-    return this.ordersClient.send('helloWorldMethod', data);
+    return this.ordersClient.send('getOrders', data);
   }
 }

@@ -8,6 +8,6 @@ export class ProductsService {
     ) {}
 
     getProducts(data) {
-      return this.productsClient.send('helloWorldMethod', data);
+      return this.productsClient.send('getProducts', data);
     }
   }

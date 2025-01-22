@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { ProductsService } from './products.service';
 
 @Controller('/products')
@@ -7,8 +7,8 @@ export class ProductsController {
     private readonly productsService: ProductsService
   ) {}
 
-  @Get()
-  getOrder() {
-    return this.productsService.getProducts('Get product 1');
+  @Get(':id')
+  getOrder(@Param('id') id:string) {
+    return this.productsService.getProducts(`Get product ${id}`);
   }
 }
