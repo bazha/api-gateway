@@ -22,13 +22,6 @@ export class CustomersClientService implements OnModuleInit {
   }
 
   getCustomer(customerId: string) {
-    try {
-      const response = this.customersService.getCustomer({ customerId });
-      console.log({ response });
-      return response;
-    } catch (error) {
-      console.error(error instanceof RpcException);
-      console.log({ error }, 'customer client');
-    }
+    return this.customersService.getCustomer({ customerId }); 
   }
 }
