@@ -31,7 +31,7 @@ jobs:
         run: npm install --save-dev typedoc
 
       - name: Generate Documentation
-        run: npx typedoc
+        run: npx typedoc --entryPoints src/**/*.ts --out docs
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
