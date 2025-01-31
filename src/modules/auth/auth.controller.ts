@@ -17,6 +17,13 @@ import { Request, Response } from 'express';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  /**
+   * Handles user authentication
+   * @param body userId - the id of user
+   * @param res put refresh_token in cookie if authentication is successfully
+   * @returns An access_token if authentication is successfully
+   */
+
   @Post('login')
   async login(@Body() body: LoginDto, @Res() res: Response) {
     const accessToken = await this.authService.generateAccessToken(body.userId);
