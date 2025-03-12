@@ -17,10 +17,9 @@ import { CustomersClientService } from './customers.client';
           url: 'customers:3003',
         },
       },
-    ])
+    ]),
   ],
   controllers: [CustomersController],
-  providers: [CustomersClientService]
+  providers: [CustomersClientService],
 })
-
-export class CustomerModule { }
+export class CustomerModule {}

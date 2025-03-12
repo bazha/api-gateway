@@ -8,6 +8,10 @@ export class OrdersService {
   ) {}
 
   getOrders(data) {
-    return this.ordersClient.send('getOrders', data);
+    return this.ordersClient.send('get_orders', data);
+  }
+
+  createOrder(data) {
+    return this.ordersClient.emit('create_order', data);
   }
 }

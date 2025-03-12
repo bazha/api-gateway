@@ -1,5 +1,5 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { ClientGrpc, RpcException } from '@nestjs/microservices';
+import { ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 
 interface CustomersServiceGrpc {
@@ -22,6 +22,6 @@ export class CustomersClientService implements OnModuleInit {
   }
 
   getCustomer(customerId: string) {
-    return this.customersService.getCustomer({ customerId }); 
+    return this.customersService.getCustomer({ customerId });
   }
 }
