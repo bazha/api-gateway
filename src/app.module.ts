@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
 
 import { OrderModule } from './modules/orders/orders.module';
@@ -8,9 +8,16 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ExceptionsFilter } from './common/filters/exceptions.filter';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
-import { RateLimiterMiddleware } from './common/middlwares/rate-limiter.middleware';
+import { RateLimiterModule } from './modules/rate-limiter/rate-limiter.module';
+import { ThrottlerGuard } from '@nestjs/throttler';
 @Module({
-  imports: [OrderModule, ProductModule, CustomerModule, AuthModule],
+  imports: [
+    OrderModule,
+    ProductModule,
+    CustomerModule,
+    AuthModule,
+    RateLimiterModule,
+  ],
   controllers: [],
   providers: [
     {
@@ -23,12 +30,12 @@ import { RateLimiterMiddleware } from './common/middlwares/rate-limiter.middlewa
     },
     {
       provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
   ],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(RateLimiterMiddleware).forRoutes('*');
-  }
-}
+export class AppModule {}
