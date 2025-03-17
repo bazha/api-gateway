@@ -2,24 +2,13 @@ import {
   ArgumentsHost,
   Catch,
   ExceptionFilter,
-  HttpException,
   HttpStatus,
 } from '@nestjs/common';
 
-class CommonException extends HttpException {
-  public details?: string;
-  public code?: number;
-
-  constructor(
-    message: string,
-    statusCode: number = HttpStatus.BAD_REQUEST,
-    details?: string,
-    code?: number,
-  ) {
-    super(message, statusCode);
-    this.code = code;
-    this.details = details;
-  }
+interface CommonException extends Error {
+  details?: string;
+  code?: number;
+  status?: number;
 }
 
 @Catch()
@@ -41,15 +30,13 @@ export class ExceptionsFilter implements ExceptionFilter {
     };
 
     const status =
-      statusMap[exception.code] ||
-      exception.getStatus() ||
+      statusMap[exception?.code] ||
+      exception?.status ||
       HttpStatus.INTERNAL_SERVER_ERROR;
-
-    const res = exception.getResponse();
 
     return response.status(status).json({
       ...errorResponse,
-      details: exception?.message || res,
+      details: exception?.message || 'No details',
       statusCode: status,
     });
   }
