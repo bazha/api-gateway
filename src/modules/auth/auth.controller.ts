@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Post,
-  Req,
-  Res,
-  Body,
-  UseGuards,
-  HttpCode,
-} from '@nestjs/common';
+import { Controller, Post, Req, Res, Body, UseGuards } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
@@ -35,17 +27,26 @@ export class AuthController {
     res.cookie('refresh_token', refreshToken, {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: 'strict',
     });
 
     return res.json({ access_token: accessToken });
   }
 
+  @Public()
   @Post('refresh')
   @UseGuards(JwtRefreshGuard)
-  @HttpCode(200)
-  async refresh(@Req() req: Request): Promise<{ access_token: string }> {
-    const { pub: userId } = req.user as { pub: string };
+  async refresh(@Req() req: Request, @Res() res: Response) {
+    const { userId } = req.user as { userId };
     const newAccessToken = await this.authService.generateAccessToken(userId);
-    return { access_token: newAccessToken };
+    const refreshToken = await this.authService.generateRefreshToken(userId);
+
+    res.cookie('refresh_token', refreshToken, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: 'strict',
+    });
+
+    return res.json({ access_token: newAccessToken });
   }
 }
