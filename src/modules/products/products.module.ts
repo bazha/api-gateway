@@ -28,10 +28,9 @@ import { ProductsController } from './products.controller';
           protoPath: join(__dirname, '../../protos/products.proto'),
         },
       },
-    ])
+    ]),
   ],
   controllers: [ProductsController],
-  providers: [ProductsService]
+  providers: [ProductsService],
 })
-
-export class ProductModule { }
+export class ProductModule {}

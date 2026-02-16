@@ -13,7 +13,10 @@ export class LoggingInterceptor implements NestInterceptor {
     const now = Date.now();
     return next.handle().pipe(
       tap(() => console.log(`Request processing time: ${Date.now() - now}ms`)),
-      catchError((err) => throwError(() => console.log({ err }))),
+      catchError((err) => {
+        console.error('Error occurred:', err);
+        return throwError(() => err);
+      }),
     );
   }
 }

@@ -7,7 +7,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
       throttlers: [
         {
           ttl: 60 * 1000, // 1 minute
-          limit: 5,
+          limit: 100, // Increased from 5 to 100
         },
       ],
     }),

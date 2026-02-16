@@ -1,6 +1,7 @@
-import { Controller, Get, Param, Post } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { Public } from '../auth/decorators/public.decorator';
+import { CreateOrderDto } from './dto/order.dto';
 
 @Controller('/orders')
 export class OrdersController {
@@ -8,15 +9,12 @@ export class OrdersController {
 
   @Get(':id')
   getOrder(@Param('id') id: string) {
-    return this.ordersService.getOrders(`Get order ${id}`);
+    return this.ordersService.getOrders({ orderId: id });
   }
 
   @Public()
   @Post()
-  createOrder() {
-    const order = { id: 1, product: 'Laptop' };
-    this.ordersService.createOrder(order);
-
-    return { message: 'Order created!' };
+  createOrder(@Body() orderData: CreateOrderDto) {
+    return this.ordersService.createOrder(orderData);
   }
 }

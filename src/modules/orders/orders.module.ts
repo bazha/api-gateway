@@ -27,11 +27,10 @@ import { OrdersController } from './orders.controller';
           package: 'orders',
           protoPath: join(__dirname, '../../protos/orders.proto'),
         },
-      }
-    ])
+      },
+    ]),
   ],
   controllers: [OrdersController],
-  providers: [OrdersService]
+  providers: [OrdersService],
 })
-
-export class OrderModule { }
+export class OrderModule {}
