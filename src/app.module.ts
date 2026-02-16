@@ -2,6 +2,7 @@ import { Module, ClassSerializerInterceptor } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard } from '@nestjs/throttler';
+import { LoggerModule } from 'nestjs-pino';
 import * as Joi from 'joi';
 
 import { OrderModule } from './modules/orders/orders.module';
@@ -33,10 +34,49 @@ import { RateLimiterModule } from './modules/rate-limiter/rate-limiter.module';
         JWT_REFRESH_SECRET: Joi.string().required(),
         RABBITMQ_URL: Joi.string().required(),
         ALLOWED_ORIGINS: Joi.string().default('http://localhost:3000'),
+        ORDERS_GRPC_URL: Joi.string().default('localhost:3001'),
+        PRODUCTS_GRPC_URL: Joi.string().default('localhost:3002'),
+        CUSTOMERS_GRPC_URL: Joi.string().default('localhost:3003'),
+        ENABLE_GRPC: Joi.boolean().default(false),
+        LOG_LEVEL: Joi.string()
+          .valid('debug', 'info', 'warn', 'error')
+          .default('info'),
+        REQUEST_TIMEOUT_MS: Joi.number().default(30000),
+        MAX_REQUEST_SIZE: Joi.string().default('10mb'),
       }),
     }),
-    OrderModule,
-    ProductModule,
+    LoggerModule.forRoot({
+      pinoHttp: {
+        transport:
+          process.env.NODE_ENV !== 'production'
+            ? {
+                target: 'pino-pretty',
+                options: {
+                  singleLine: true,
+                  colorize: true,
+                  translateTime: 'HH:MM:ss Z',
+                  ignore: 'pid,hostname',
+                },
+              }
+            : undefined,
+        customProps: () => ({
+          context: 'HTTP',
+        }),
+        serializers: {
+          req: (req) => ({
+            id: req.id,
+            method: req.method,
+            url: req.url,
+          }),
+          res: (res) => ({
+            statusCode: res.statusCode,
+          }),
+        },
+        level: process.env.LOG_LEVEL || 'info',
+      },
+    }),
+    OrderModule.forRoot(),
+    ProductModule.forRoot(),
     CustomerModule,
     AuthModule,
     RateLimiterModule,

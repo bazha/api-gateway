@@ -1,5 +1,6 @@
 import { DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
+import { Logger } from '@nestjs/common';
 import { User } from './entities/user';
 
 export const databaseProviders = [
@@ -7,6 +8,7 @@ export const databaseProviders = [
     provide: 'DATABASE_SOURCE',
     inject: [ConfigService],
     useFactory: async (configService: ConfigService) => {
+      const logger = new Logger('DatabaseProvider');
       const dataSource = new DataSource({
         type: 'postgres',
         host: configService.get<string>('DB_HOST'),
@@ -21,10 +23,10 @@ export const databaseProviders = [
 
       try {
         await dataSource.initialize();
-        console.log('Database connected successfully');
+        logger.log('Database connected successfully');
         return dataSource;
       } catch (error) {
-        console.error('Database connection failed:', error);
+        logger.error('Database connection failed', error.stack);
         throw error;
       }
     },

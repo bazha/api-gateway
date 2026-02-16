@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package customers;
+
+service CustomerService {
+  rpc GetCustomer(CustomerRequest) returns (CustomerResponse);
+  rpc GetCustomers(GetCustomersRequest) returns (CustomersResponse);
+  rpc CreateCustomer(CreateCustomerRequest) returns (CustomerResponse);
+  rpc UpdateCustomer(UpdateCustomerRequest) returns (CustomerResponse);
+  rpc DeleteCustomer(DeleteCustomerRequest) returns (DeleteCustomerResponse);
+}
+
+message CustomerRequest {
+  string customerId = 1;
+}
+
+message CreateCustomerRequest {
+  string email = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string phone = 4;
+  Address address = 5;
+}
+
+message UpdateCustomerRequest {
+  string customerId = 1;
+  string email = 2;
+  string firstName = 3;
+  string lastName = 4;
+  string phone = 5;
+  Address address = 6;
+}
+
+message DeleteCustomerRequest {
+  string customerId = 1;
+}
+
+message Address {
+  string street = 1;
+  string city = 2;
+  string state = 3;
+  string zipCode = 4;
+  string country = 5;
+}
+
+message CustomerResponse {
+  string customerId = 1;
+  string email = 2;
+  string firstName = 3;
+  string lastName = 4;
+  string phone = 5;
+  Address address = 6;
+  int64 createdAt = 7;
+  int64 updatedAt = 8;
+}
+
+message GetCustomersRequest {
+  int32 limit = 1;
+  int32 offset = 2;
+  string search = 3;
+}
+
+message CustomersResponse {
+  repeated CustomerResponse customers = 1;
+  int32 total = 2;
+}
+
+message DeleteCustomerResponse {
+  bool success = 1;
+  string message = 2;
+}

@@ -5,11 +5,21 @@ import { ConfigService } from '@nestjs/config';
 import * as cookieParser from 'cookie-parser';
 import * as compression from 'compression';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { json, urlencoded } from 'express';
+import * as hpp from 'hpp';
 
 async function bootstrap() {
   const logger = new Logger('bootstrap');
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
+
+  // Request body size limits (prevent DoS)
+  const maxSize = configService.get<string>('MAX_REQUEST_SIZE', '10mb');
+  app.use(json({ limit: maxSize }));
+  app.use(urlencoded({ extended: true, limit: maxSize }));
+
+  // HTTP Parameter Pollution protection
+  app.use(hpp());
 
   // CORS configuration
   app.enableCors({
@@ -21,12 +31,16 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
-  // Global ValidationPipe
+  // Global ValidationPipe with enhanced security
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+      forbidUnknownValues: true,
     }),
   );
 

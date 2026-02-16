@@ -1,4 +1,4 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit, Optional } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 
@@ -13,15 +13,24 @@ export class CustomersClientService implements OnModuleInit {
   private customersService: CustomersServiceGrpc;
 
   constructor(
-    @Inject('CUSTOMERS_GRPC_SERVICE') private readonly client: ClientGrpc,
+    @Optional()
+    @Inject('CUSTOMERS_GRPC_SERVICE')
+    private readonly client: ClientGrpc,
   ) {}
 
   onModuleInit() {
-    this.customersService =
-      this.client.getService<CustomersServiceGrpc>('CustomersService');
+    if (this.client) {
+      this.customersService =
+        this.client.getService<CustomersServiceGrpc>('CustomersService');
+    }
   }
 
   getCustomer(customerId: string) {
+    if (!this.customersService) {
+      throw new Error(
+        'gRPC customer service is not available. Set ENABLE_GRPC=true to enable it.',
+      );
+    }
     return this.customersService.getCustomer({ customerId });
   }
 }

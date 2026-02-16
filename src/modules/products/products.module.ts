@@ -1,36 +1,44 @@
-import { Module } from '@nestjs/common';
+import { Module, DynamicModule } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { join } from 'path';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { ProductsService } from './products.service';
 import { ProductsController } from './products.controller';
 
-@Module({
-  imports: [
-    ClientsModule.register([
-      {
-        name: 'PRODUCT_SERVICE',
-        transport: Transport.RMQ,
-        options: {
-          urls: ['amqp://guest:guest@rabbitmq:5672'],
-          queue: 'products_queue',
-          queueOptions: {
-            durable: true,
-          },
-        },
-      },
-      {
-        name: 'PRODUCT_GRPC_SERVICE',
-        transport: Transport.GRPC,
-        options: {
-          url: 'products:3002',
-          package: 'products',
-          protoPath: join(__dirname, '../../protos/products.proto'),
-        },
-      },
-    ]),
-  ],
-  controllers: [ProductsController],
-  providers: [ProductsService],
-})
-export class ProductModule {}
+@Module({})
+export class ProductModule {
+  static forRoot(): DynamicModule {
+    return {
+      module: ProductModule,
+      imports: [
+        ConfigModule,
+        ClientsModule.registerAsync({
+          isGlobal: false,
+          clients: [
+            {
+              name: 'PRODUCT_SERVICE',
+              imports: [ConfigModule],
+              useFactory: (configService: ConfigService) => ({
+                transport: Transport.RMQ,
+                options: {
+                  urls: [configService.get<string>('RABBITMQ_URL')],
+                  queue: 'products_queue',
+                  queueOptions: {
+                    durable: true,
+                  },
+                  socketOptions: {
+                    heartbeatIntervalInSeconds: 60,
+                    reconnectTimeInSeconds: 5,
+                  },
+                },
+              }),
+              inject: [ConfigService],
+            },
+          ],
+        }),
+      ],
+      controllers: [ProductsController],
+      providers: [ProductsService],
+    };
+  }
+}
