@@ -5,6 +5,8 @@ import { ConfigService } from '@nestjs/config';
 
 export interface JwtPayload {
   sub: string;
+  /** Refresh-token rotation generation. Present on refresh tokens only. */
+  ver?: number;
   iat?: number;
   exp?: number;
 }
@@ -14,7 +16,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(private configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: configService.get<string>('JWT_SECRET'),
+      secretOrKey: configService.getOrThrow<string>('JWT_SECRET'),
     });
   }
 
